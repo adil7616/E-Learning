@@ -1,2 +1,2 @@
 # E-Learning
-this is a e-Learning platform for mini project in university 
+this is an e-Learning platform for mini project in university 

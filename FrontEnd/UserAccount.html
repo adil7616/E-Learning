@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile - E-Learning</title>
+    <style>
+        /* General Styling */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+
+        header {
+            background-color: #ffffff;
+            color: #0d0b0b;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+        }
+
+        header .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        /* Navigation Links Styling */
+        header nav a {
+            color: #110f0f; /* Set link color to white */
+            margin: 0 10px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        header nav a:hover {
+            text-decoration: underline; /* Add underline on hover for better visibility */
+        }
+
+        /* Profile Section */
+        .profile {
+            margin: 50px auto;
+            max-width: 600px;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .profile h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .profile-info p {
+            font-size: 1.1rem;
+            margin: 10px 0;
+        }
+
+        .common-btn {
+            display: block;
+            width: 100%;
+            text-align: center;
+            background-color: #0047ab;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 10px;
+            font-size: 1rem;
+            margin-top: 15px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .common-btn:hover {
+            background-color: #003380;
+        }
+
+        .logout-btn {
+            background-color: red;
+        }
+
+        .logout-btn:hover {
+            background-color: darkred;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            margin: 20px 0;
+            color: #555;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .profile {
+                margin: 20px;
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">E-Learning</div>
+        <nav>
+            <a href="AdminIndex.html" class="nav-link">Home</a>
+            <a href="AdminAddCourses.html" class="nav-link">Courses</a>
+            <a href="about.html" class="nav-link">About</a>
+        </nav>
+    </header>
+
+    <main>
+        <section class="profile">
+            <h2>My Profile</h2>
+            <div class="profile-info">
+                <p><strong>User ID:</strong> <span id="user-id">Loading...</span></p>
+                <p><strong>Name:</strong> <span id="user-name">Loading...</span></p>
+                <p><strong>Email:</strong> <span id="user-email">Loading...</span></p>
+                <p><strong>Role:</strong> <span id="user-role">Loading...</span></p>
+                <p><strong>Verified:</strong> <span id="user-verified">Loading...</span></p>
+                <p><strong>Created At:</strong> <span id="user-created">Loading...</span></p>
+                <p><strong>Updated At:</strong> <span id="user-updated">Loading...</span></p>
+                <button id="adminDashboardBtn" class="common-btn" style="display: none;">
+                    <span class="icon">⚙️</span> Admin Dashboard
+                </button>
+                <button id="logoutBtn" class="common-btn logout-btn">
+                    <span class="icon">🚪</span> Logout
+                </button>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 E-Learning Platform | All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Base API URL
+        const apiURL = "http://localhost:8080/api/user/me";
+
+        function getAuthToken() {
+            return localStorage.getItem('token');
+        }
+
+
+        // Fetch user data from the backend
+        async function fetchUserData() {
+            try {
+                const token = getAuthToken();
+               // alert(token);
+                if (!token) {
+                throw new Error("Authentication token not found. Please log in.");
+                }
+
+                const response = await fetch(apiURL, {
+                    method: "GET",
+                    headers: {
+                        "token": token // Add your token as an authentication header
+                    },
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Error: ${response.status} - ${response.statusText}`);
+                }
+
+                const data = await response.json(); // Parse JSON data
+                console.log("User Data:", data);
+               // console.log(userData.user.email);
+                const userData=data.user;
+
+                // Populate user info
+                document.getElementById("user-id").textContent = userData._id || "N/A";
+                document.getElementById("user-name").textContent = userData.name || "N/A";
+                document.getElementById("user-email").textContent = userData.email || "N/A";
+                document.getElementById("user-role").textContent = userData.role || "N/A";
+                document.getElementById("user-verified").textContent = userData.isVerified? "Yes" : "No";
+                document.getElementById("user-created").textContent = new Date(userData.createdAt).toLocaleString();
+                document.getElementById("user-updated").textContent = new Date(userData.updatedAt).toLocaleString();
+
+                // Show admin dashboard button if the user is an admin
+                if (userData.role === "admin") {
+                    document.getElementById("adminDashboardBtn").style.display = "block";
+                }
+            } catch (error) {
+                console.error("Failed to fetch user data:", error);
+                alert("Unable to load user information. Please try again.");
+            }
+        }
+
+        // Logout function
+        document.getElementById("logoutBtn").addEventListener("click", () => {
+            // Clear token or perform logout actions
+            localStorage.removeItem("token");
+            alert("You have been logged out.");
+            token=null;
+            window.location.href = "home.html"; // Redirect to the login page
+        });
+
+        // Fetch user data when the page loads
+        document.addEventListener("DOMContentLoaded", fetchUserData);
+    </script>
+</body>
+</html>

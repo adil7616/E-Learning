@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - E-Learning</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="social-media-bar">
+        <div class="container">
+            <div class="top-bar">
+                <p>For the students of University of Hyderabad!</p>
+            </div>
+            <div class="social-media-links">
+                <a href="#" target="_blank" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                <a href="#" target="_blank" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                <a href="#" target="_blank" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                <a href="#" target="_blank" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+            </div>
+        </div>
+    </div>
+    
+    <header>
+        <div class="header-main">
+            <!-- <div class="logo">
+                <img src="uoh.png" alt="E-Learning Logo">
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="courses.html">Courses</a></li>
+                    <li><a href="#">Teachers</a></li> -->
+                    <!-- <li><a href="#">About</a></li>
+                    <li><a href="#">Contact</a></li>
+                </ul>
+            </nav> -->
+            <!-- <div class="contact-info">
+                <p><i class="fas fa-phone"></i> +123 4567 8910</p>
+                <p><i class="fas fa-envelope"></i> info@example.com</p>
+                <a href="login.html"><button class="login-btn" aria-label="Login">Login</button></a> -->
+            <!-- </div>
+            <div class="logo">
+                <img src="ioe2.png" alt="E-Learning Logo">
+            </div>
+        </div> -->
+    </header>
+    
+    <section class="auth-section">
+        <div class="auth-container">
+            <h2>Register</h2>
+            <form id="registerForm" aria-label="Registration Form">
+                <label for="name">Username</label>
+                <input type="text" id="username" name="name" placeholder="Choose a name" required aria-required="true">
+    
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" placeholder="Enter your email" required aria-required="true">
+    
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" placeholder="Create a password" required aria-required="true">
+                
+                <label for="User-Type">Role</label>
+                <select id="category" required>
+                    <option value="user">User</option>
+                    <option value="admin">Admin</option>
+                </select>
+                
+    
+                <!-- Password Specifications -->
+                <div class="password-specifications">
+                    <h4>Password must meet the following requirements:</h4>
+                    <ul>
+                        <li id="min-length" class="invalid">At least 8 characters long</li>
+                        <li id="uppercase" class="invalid">At least one uppercase letter (e.g., A)</li>
+                        <li id="lowercase" class="invalid">At least one lowercase letter (e.g., a)</li>
+                        <li id="number" class="invalid">At least one numeric digit (e.g., 1)</li>
+                        <li id="special-char" class="invalid">At least one special character (e.g., !@#$%^&*)</li>
+                    </ul>
+                </div>
+    
+                <button type="submit" class="submit-btn" aria-label="Register">Register</button>
+                <!-- <p> <a href="login.html"> Login if you are already registered </a></p> -->
+
+            </form>
+    
+            <div id="otpSection" style="display: none;">
+                <h2>Verify OTP</h2>
+                <label for="otp">Enter OTP</label>
+                <input type="text" id="otpInput" name="otp" placeholder="Enter OTP" required aria-required="true">
+                <button id="verifyOtpButton" class="submit-btn" aria-label="Submit OTP">Submit OTP</button>
+            </div>
+        </div>
+    </section>
+    
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 E-Learning, University of Hyderabad. All rights reserved.</p>
+        </div>
+    </footer>
+    <div class="overlay" id="overlay"></div>
+    <div class="popup" id="popup">
+        <div id="responseMessage"></div>
+        <button id="closePopup" style="margin-top: 10px;" aria-label="Close">Close</button>
+    </div>
+
+    <script>
+        const registerForm = document.getElementById('registerForm');
+        const submitBtn = document.querySelector('.submit-btn');
+        const otpSection = document.getElementById('otpSection');
+        const otpInput = document.getElementById('otpInput');
+        let activationToken = '';
+
+        function isValidEmail(email) {
+            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return re.test(String(email).toLowerCase());
+        }
+
+        // Password validation based on specifications
+        function validatePassword(password) {
+            const minLength = 8;
+            const hasUpperCase = /[A-Z]/;
+            const hasLowerCase = /[a-z]/;
+            const hasDigits = /\d/;
+            const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/;
+
+            document.getElementById('min-length').classList.toggle('invalid', password.length < minLength);
+            document.getElementById('uppercase').classList.toggle('invalid', !hasUpperCase.test(password));
+            document.getElementById('lowercase').classList.toggle('invalid', !hasLowerCase.test(password));
+            document.getElementById('number').classList.toggle('invalid', !hasDigits.test(password));
+            document.getElementById('special-char').classList.toggle('invalid', !hasSpecialChar.test(password));
+
+            if (password.length >= minLength && hasUpperCase.test(password) && hasLowerCase.test(password) && hasDigits.test(password) && hasSpecialChar.test(password)) {
+                return null; // All checks passed
+            }
+            return 'Password does not meet the required specifications.';
+        }
+
+        registerForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            submitBtn.disabled = true;
+
+            const formData = new FormData(event.target);
+            const data = {
+                name: formData.get('name'),
+                email: formData.get('email'),
+                password: formData.get('password'),
+                role:  document.getElementById("category").value,
+            };
+            alert(data.role);
+            if (!data.name || !data.email || !data.password) {
+                showPopup('Please fill in all fields.', false);
+                submitBtn.disabled = false;
+                return;
+            }
+
+            // Validate password specifications
+            const passwordValidationError = validatePassword(data.password);
+            if (passwordValidationError) {
+                showPopup(passwordValidationError, false);
+                submitBtn.disabled = false;
+                return;
+            }
+
+            if (!isValidEmail(data.email)) {
+                showPopup('Please enter a valid email address.', false);
+                submitBtn.disabled = false;
+                return;
+            }
+
+            try {
+                const response = await fetch('http://localhost:8080/api/user/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    showPopup('Registration successful! OTP has been sent to your email.', true);
+                    registerForm.style.display = 'none'; 
+                    otpSection.style.display = 'block'; 
+                    otpInput.value = ''; 
+                    activationToken = result.activationToken; 
+                } else {
+                    showPopup(result.message || 'Registration failed. Please try again.', false);
+                }
+
+            } catch (error) {
+                showPopup('An error occurred while registering. Please check your connection or try again later.', false);
+            } finally {
+                submitBtn.disabled = false;
+            }
+        });
+
+        document.getElementById('verifyOtpButton').addEventListener('click', async () => {
+            const otp = otpInput.value;
+
+            if (!otp) {
+                showPopup('Please enter the OTP.', false);
+                return;
+            }
+
+            try {
+                const response = await fetch('http://localhost:8080/api/user/verify', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ otp, activationToken })
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    showPopup('OTP verification successful! Redirecting to the login page...', true);
+                    setTimeout(() => {
+                        window.location.href = 'login.html';
+                    }, 3000);
+                } else {
+                    showPopup(result.message || 'Invalid OTP. Please try again.', false);
+                }
+
+            } catch (error) {
+                showPopup('An error occurred while verifying OTP. Please try again.', false);
+            }
+        });
+
+        function showPopup(message, isSuccess) {
+            const popup = document.getElementById('popup');
+            const overlay = document.getElementById('overlay');
+            const responseMessage = document.getElementById('responseMessage');
+
+            responseMessage.textContent = message;
+            responseMessage.style.color = isSuccess ? 'green' : 'red';
+
+            popup.style.display = 'block';
+            overlay.style.display = 'block';
+        }
+
+        document.getElementById('closePopup').addEventListener('click', () => {
+            document.getElementById('popup').style.display = 'none';
+            document.getElementById('overlay').style.display = 'none';
+        });
+
+        document.getElementById('overlay').addEventListener('click', () => {
+            document.getElementById('popup').style.display = 'none';
+            document.getElementById('overlay').style.display = 'none';
+        });
+    </script>
+</body>
+</html>

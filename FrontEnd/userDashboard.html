@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | E-Learning Platform</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        /* General Styling */
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+
+        .student-dashboard {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+            background: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .student-dashboard h2 {
+            font-size: 2em;
+            color: #2575fc;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .dashboard-content {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        /* Course Card Styling */
+        .course-card {
+            background: #ffffff;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            width: 280px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .course-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .course-card img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+        }
+
+        .course-card h3 {
+            font-size: 1.2em;
+            color: #333;
+            margin: 15px 0;
+        }
+
+        .course-card p {
+            color: #555;
+            margin: 0 15px 15px;
+            font-size: 0.9em;
+            line-height: 1.5;
+        }
+
+        .course-card button {
+            background: #2575fc;
+            color: #ffffff;
+            border: none;
+            padding: 10px 15px;
+            font-size: 1em;
+            border-radius: 5px;
+            margin: 15px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .course-card button:hover {
+            background: #1b5dbf;
+        }
+
+        /* No Courses Styling */
+        .no-courses {
+            font-size: 1.2em;
+            color: #888;
+            text-align: center;
+            margin: 20px auto;
+        }
+
+        /* Spinner Styling */
+        .loading-spinner {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100px;
+        }
+
+        .loading-spinner div {
+            width: 16px;
+            height: 16px;
+            margin: 4px;
+            background: #2575fc;
+            border-radius: 50%;
+            animation: loading 0.8s infinite ease-in-out both;
+        }
+
+        .loading-spinner div:nth-child(1) {
+            animation-delay: -0.4s;
+        }
+
+        .loading-spinner div:nth-child(2) {
+            animation-delay: -0.3s;
+        }
+
+        .loading-spinner div:nth-child(3) {
+            animation-delay: -0.2s;
+        }
+
+        .loading-spinner div:nth-child(4) {
+            animation-delay: -0.1s;
+        }
+
+        @keyframes loading {
+            0%, 80%, 100% {
+                transform: scale(0);
+            }
+            40% {
+                transform: scale(1);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Dashboard Container -->
+    <div class="student-dashboard">
+        <h2>All Enrolled Courses</h2>
+        <div class="dashboard-content" id="dashboard-content">
+            <!-- Dynamic courses will load here -->
+        </div>
+    </div>
+
+    <script>
+        const API_URL = "http://localhost:8080/api/My_course"; // Adjust API endpoint as needed
+
+        // Function to fetch courses
+        async function fetchCourses() {
+            const contentContainer = document.getElementById("dashboard-content");
+            contentContainer.innerHTML = `
+                <div class="loading-spinner">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                </div>
+            `; // Add a spinner while loading
+
+            try {
+                const response = await fetch(API_URL);
+                if (!response.ok) {
+                    throw new Error(`Failed to fetch courses: ${response.statusText}`);
+                }
+
+                const data = await response.json();
+                renderCourses(data.courses || []);
+            } catch (error) {
+                contentContainer.innerHTML = `
+                    <p class='no-courses'>
+                        Failed to load courses. Please check your internet connection or try again later.
+                    </p>
+                `;
+                console.error("Error fetching courses:", error);
+            }
+        }
+
+        // Function to render courses
+        function renderCourses(courses) {
+            const contentContainer = document.getElementById("dashboard-content");
+            contentContainer.innerHTML = ""; // Clear loading message
+
+            if (!courses.length) {
+                contentContainer.innerHTML = "<p class='no-courses'>No courses enrolled yet.</p>";
+                return;
+            }
+
+            courses.forEach((course) => {
+                const courseCard = document.createElement("div");
+                courseCard.className = "course-card";
+
+                courseCard.innerHTML = `
+                    <img src="${course.image}" alt="${course.title}" loading="lazy">
+                    <h3>${course.title}</h3>
+                    <p>${course.description}</p>
+                    <button onclick="viewCourse('${course._id}')">View Details</button>
+                `;
+
+                contentContainer.appendChild(courseCard);
+            });
+        }
+
+        // Function to handle "View Details" button click
+        function viewCourse(courseId) {
+            if (courseId) {
+                window.location.href = `course-details.html?courseId=${courseId}`;
+            } else {
+                alert("Invalid course ID.");
+            }
+        }
+
+        // Initialize fetching courses
+        fetchCourses();
+    </script>
+</body>
+</html>

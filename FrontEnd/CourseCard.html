@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Course Card</title>
+</head>
+<body style="font-family: Arial, sans-serif; background-color: #f9f9f9; margin: 0; padding: 0;">
+
+    <!-- Course Card Section -->
+    <div style="display: flex; justify-content: center; align-items: center; height: 100vh;">
+        <div id="course-card" style="background-color: #fff; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); width: 300px; padding: 20px; text-align: center;">
+            <!-- Image Section -->
+            <img id="course-image" src="" alt="Course Image" style="width: 100%; border-radius: 8px; margin-bottom: 20px;" />
+            <h3 id="course-name" style="color: #333; font-size: 1.5em; margin: 0;"></h3>
+            <p id="instructor" style="color: #555; font-size: 1em; margin: 10px 0;"></p>
+            <p id="duration" style="color: #555; font-size: 1em; margin: 10px 0;"></p>
+            <p id="price" style="color: #5a2d82; font-size: 1.2em; font-weight: bold; margin: 10px 0;"></p>
+
+            <!-- Buttons for Actions (Get Started, Study, Delete) -->
+            <div>
+                <button 
+                    id="get-started-btn" 
+                    style="background-color: #5a2d82; color: #fff; border: none; padding: 10px 20px; border-radius: 4px; font-size: 1em; cursor: pointer; margin: 5px;">
+                    Get Started
+                </button>
+                <button 
+                    id="study-btn" 
+                    style="background-color: #28a745; color: #fff; border: none; padding: 10px 20px; border-radius: 4px; font-size: 1em; cursor: pointer; margin: 5px; display: none;">
+                    Study
+                </button>
+                <button 
+                    id="delete-btn" 
+                    style="background-color: #dc3545; color: #fff; border: none; padding: 10px 20px; border-radius: 4px; font-size: 1em; cursor: pointer; margin: 5px; display: none;">
+                    Delete
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Backend API URL
+        const apiURL = "http://localhost:8080/api/My_course";
+
+        // DOM Elements
+        const getStartedBtn = document.getElementById("get-started-btn");
+        const studyBtn = document.getElementById("study-btn");
+        const deleteBtn = document.getElementById("delete-btn");
+
+        // Fetch course data from backend
+        async function fetchCourseData() {
+            try {
+                const response = await fetch(apiURL, {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                });
+
+                if (response.ok) {
+                    const data = await response.json(); // Assuming backend returns JSON data
+
+                    // Update the DOM with fetched data
+                    document.getElementById("course-image").src = data.image || "default-course-image.jpg";
+                    document.getElementById("course-name").textContent = data.courseName;
+                    document.getElementById("instructor").textContent = `Instructor - ${data.instructor}`;
+                    document.getElementById("duration").textContent = `Duration - ${data.duration}`;
+                    document.getElementById("price").textContent = `Price - ${data.price}`;
+
+                } else {
+                    alert("Failed to fetch course data. Please try again.");
+                }
+            } catch (error) {
+                console.error("Error:", error);
+                alert("An error occurred while fetching course data.");
+            }
+        }
+
+        // Event Listener for "Get Started" Button
+        getStartedBtn.addEventListener("click", async () => {
+            try {
+                // Call the backend API (assumed to be a POST or other method)
+                const response = await fetch(apiURL, {
+                    method: "POST",  // Replace with correct method if necessary
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                });
+
+                if (response.ok) {
+                    // Simulate the course being started
+                    alert("Course started successfully!");
+                    getStartedBtn.style.display = "none";
+                    studyBtn.style.display = "inline-block";
+                    deleteBtn.style.display = "inline-block";
+                } else {
+                    alert("Failed to start the course. Please try again.");
+                }
+            } catch (error) {
+                console.error("Error:", error);
+                alert("An error occurred. Please check the console for details.");
+            }
+        });
+
+        // Event Listener for "Delete" Button
+        deleteBtn.addEventListener("click", () => {
+            if (confirm("Are you sure you want to delete this course?")) {
+                alert("Course deleted.");
+                // Perform backend action if needed
+                // For now, reset the UI
+                getStartedBtn.style.display = "inline-block";
+                studyBtn.style.display = "none";
+                deleteBtn.style.display = "none";
+            }
+        });
+
+        // Event Listener for "Study" Button
+        studyBtn.addEventListener("click", () => {
+            alert("Redirecting to course study material...");
+            // Redirect to course study material if needed
+        });
+
+        // Load course data when page is loaded
+        window.onload = fetchCourseData;
+    </script>
+</body>
+</html>

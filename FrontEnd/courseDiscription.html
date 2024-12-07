@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Course Description - E-Learning</title>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <style>
+        /* General Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+
+        header {
+            background: linear-gradient(90deg, #3498db, #2980b9);
+            color: #fff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        header .logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        header nav {
+            display: flex;
+        }
+
+        header nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 10px;
+            padding: 5px 10px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        header nav a:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Course Description */
+        .course-description {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 30px;
+            text-align: center;
+            animation: fadeIn 0.8s ease-in-out;
+        }
+
+        .course-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .course-image {
+            width: 200px;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        .course-info {
+            text-align: left;
+        }
+
+        .course-info h2 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .course-info p {
+            font-size: 16px;
+            color: #555;
+        }
+
+        .common-btn {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 20px;
+        }
+
+        .common-btn:hover {
+            background-color: #1d6fa5;
+        }
+
+        /* Footer */
+        footer {
+            background-color: #2c3e50;
+            color: #fff;
+            text-align: center;
+            padding: 15px 0;
+            margin-top: 40px;
+        }
+
+        footer p {
+            font-size: 14px;
+        }
+
+        /* Spinner */
+        #loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            padding: 20px;
+        }
+
+        .loading-spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .course-header {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .course-info h2 {
+                font-size: 22px;
+            }
+
+            .course-image {
+                width: 100%;
+                height: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">E-Learning</div>
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="courses.html">Courses</a>
+            <a href="about.html">About</a>
+            <a href="login.html">Login</a>
+        </nav>
+    </header>
+
+    <main>
+        <section class="course-description" id="course-description-section">
+            <!-- Course details will be dynamically loaded -->
+        </section>
+        <div id="loading" style="display: none;">
+            <div class="loading-spinner"></div>
+            <p>Loading...</p>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 E-Learning Platform | All rights reserved.</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const courseId = new URLSearchParams(window.location.search).get('id');
+            const courseDescriptionSection = document.getElementById('course-description-section');
+            const loadingIndicator = document.getElementById('loading');
+
+            const fetchCourseDetails = () => {
+                return {
+                    title: "Web Development Masterclass",
+                    image: "https://via.placeholder.com/200",
+                    createdBy: "John Doe",
+                    duration: 12,
+                    description: "Learn full-stack web development from scratch.",
+                    price: 9999,
+                    _id: courseId,
+                };
+            };
+
+            const course = fetchCourseDetails();
+
+            const user = { subscription: [courseId] };
+
+            const renderCourse = (course) => {
+                courseDescriptionSection.innerHTML = `
+                    <div class="course-header">
+                        <img src="${course.image}" alt="${course.title}" class="course-image">
+                        <div class="course-info">
+                            <h2>${course.title}</h2>
+                            <p><strong>Instructor:</strong> ${course.createdBy}</p>
+                            <p><strong>Duration:</strong> ${course.duration} weeks</p>
+                        </div>
+                    </div>
+                    <p>${course.description}</p>
+                    <p><strong>Price:</strong> ₹${course.price}</p>
+                    ${
+                        user.subscription.includes(course._id)
+                            ? `<button class="common-btn" onclick="navigateToStudy()">Study Now</button>`
+                            : `<button class="common-btn" onclick="checkoutHandler()">Buy Now</button>`
+                    }
+                `;
+            };
+
+            renderCourse(course);
+
+            window.navigateToStudy = () => {
+                alert('Navigating to study area...');
+            };
+
+            window.checkoutHandler = () => {
+                alert('Checkout process initiated...');
+            };
+        });
+    </script>
+</body>
+</html>

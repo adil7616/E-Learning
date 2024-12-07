@@ -1,0 +1,313 @@
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Admin Add Lectures</title>
+        <style>
+            /* Inline CSS */
+            body {
+                font-family: Arial, sans-serif;
+                margin: 0;
+                padding: 0;
+                background-color: #f9f9f9;
+            }
+
+            .layout {
+                display: flex;
+                justify-content: space-between;
+                margin: 20px;
+            }
+
+            .admin-courses {
+                display: flex;
+                width: 100%;
+            }
+
+            .left {
+                width: 60%;
+                padding: 20px;
+            }
+
+            .right {
+                width: 35%;
+                padding: 20px;
+                background-color: #fff;
+                border-radius: 8px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            }
+
+            h1, h2 {
+                color: #333;
+            }
+
+            .dashboard-content {
+                padding: 10px;
+                border-radius: 4px;
+                border: 1px solid #ccc;
+                background-color: #fff;
+                margin-top: 10px;
+            }
+
+            .lecture-form input {
+                width: 100%;
+                padding: 10px;
+                margin-bottom: 10px;
+                border-radius: 4px;
+                border: 1px solid #ccc;
+            }
+
+            #videoPreview {
+                width: 100%;
+                height: 200px;
+                object-fit: cover;
+                margin-top: 10px;
+                display: none;
+            }
+
+            .common-btn, .secondary-btn {
+                padding: 10px 15px;
+                border: none;
+                border-radius: 4px;
+                font-size: 1em;
+                cursor: pointer;
+                margin-top: 10px;
+            }
+
+            .common-btn {
+                background-color: #5a2d82;
+                color: #fff;
+            }
+
+            .secondary-btn {
+                background-color: #ccc;
+                color: #333;
+            }
+        </style>
+    </head>
+    <body>
+    <div class="layout">
+        <div class="admin-courses">
+            <!-- Left Section -->
+            <div class="left">
+                <h1>Add Lectures</h1>
+                <div class="dashboard-content">
+                    <p>Adding lectures for course: <span id="courseTitle"></span></p>
+                </div>
+
+                <!-- Lecture List Section -->
+                <div id="lectureItems" class="dashboard-content">
+                    <h2>Lectures</h2>
+                    <!-- Lecture items will be dynamically inserted here -->
+                </div>
+            </div>
+
+            <!-- Right Section -->
+            <div class="right">
+                <div class="add-lecture">
+                    <div class="lecture-form">
+                        <h2>Add Lecture</h2>
+                        <form id="lectureForm">
+                            <label for="lectureTitle">Lecture Title</label>
+                            <input type="text" id="lectureTitle" required />
+
+                            <label for="lectureDescription">Description</label>
+                            <input type="text" id="lectureDescription" required />
+
+                            <label for="lectureVideo">Upload Video</label>
+                            <input type="file" id="lectureVideo" accept="video/*" required />
+                            <video id="videoPreview" controls></video>
+
+                            <button type="submit" class="common-btn">Add Lecture</button>
+                            <button type="button" id="clearBtn" class="secondary-btn">Clear Form</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const addLectureURL = 'http://localhost:8080/api/course'; // Endpoint to add a lecture
+        const fetchLecturesURL = 'http://localhost:8080/api/lectures/'; // Base URL for fetching lectures
+
+        // Get the stored token
+        function getAuthToken() {
+        return localStorage.getItem('token');
+        }
+
+        // Fetch lectures for a specific course
+        async function fetchLectures() {
+        const courseId = getCourseId(); // Get courseId from the URL
+        alert(courseId);
+        const url = `${fetchLecturesURL}${courseId}`; // Add courseId dynamically
+
+        try {
+            const token = getAuthToken();
+            alert(token);
+            
+            const response = await fetch(url, {
+            method: 'GET',
+            headers: {
+                'token': token // Pass the token in the header for authentication
+            }
+            });
+
+            // Handle response status
+            if (!response.ok) {
+            throw new Error(`Error: ${response.status} - ${response.statusText}`);
+            }
+
+            const data = await response.json();
+            console.log('Lecture Data:', data);
+            if (Array.isArray(data.lectures)) {
+            displayLectures(data.lectures); // Display the fetched lectures
+            } else {
+            throw new Error('Lecture data format invalid');
+            }
+        } catch (error) {
+            console.error('Error fetching lectures:', error);
+            document.getElementById('lectureItems').innerHTML = '<p>Error loading lectures. Please try again later.</p>';
+        }
+        }
+
+        // Get courseId from URL
+        function getCourseId() {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get('courseId'); // Ensure 'courseId' is correct in the URL
+        }
+
+        // Display lectures in the UI
+        function displayLectures(lectures) {
+        const lectureItems = document.getElementById('lectureItems');
+        lectureItems.innerHTML = ''; // Clear existing list
+        if (lectures.length === 0) {
+            lectureItems.innerHTML = '<p>No Lectures Available</p>';
+        } else {
+            lectures.forEach(lecture => {
+            const lectureItem = document.createElement('div');
+            lectureItem.classList.add('lecture-item');
+            lectureItem.innerHTML = `
+                <h3>${lecture.title}</h3>
+                <p>${lecture.description}</p>
+                <video width="200" height="150" controls>
+                <source src="${new URL(lecture.video, 'file:///D:/E-Learning/main/Server/')}" type="video/mp4">
+                </video>
+                <button class= "delete-btn" onclick="deleteLecture('${lecture._id}')"> Delete </button>
+            `;
+            lectureItems.appendChild(lectureItem);
+            });
+        }
+        }
+
+        // Add lecture to the specific course
+        document.getElementById('lectureForm').addEventListener('submit', async function (event) {
+        event.preventDefault();
+
+        const token = getAuthToken();
+        const courseId = getCourseId();
+        console.log('Token:', token);
+        console.log('CourseId:', courseId);
+
+        if (!courseId) {
+            alert('Course ID is missing.');
+            return;
+        }
+        if (!token) {
+            alert('Auth token is missing.');
+            return;
+        }
+
+        const newLecture = {
+            title: document.getElementById('lectureTitle').value,
+            description: document.getElementById('lectureDescription').value,
+            file: document.getElementById('lectureVideo').files[0]
+        };
+
+        const formData = new FormData();
+        for (let key in newLecture) {
+            formData.append(key, newLecture[key]);
+        }
+
+        try {
+            const response = await fetch(`${addLectureURL}/${courseId}`, {
+            method: 'POST',
+            headers: {
+                'token': token // Pass the token in the Authorization header
+            },
+            body: formData
+            });
+            const result = await response.json();
+
+            if (response.ok) {
+            alert('Lecture added successfully!');
+            document.getElementById('lectureForm').reset(); // Reset the form
+            fetchLectures(); // Reload lectures after adding
+            } else {
+            alert(result.message || 'Failed to add lecture.');
+            console.error('Error details:', result);
+            }
+        } catch (error) {
+            console.error('Error adding lecture:', error);
+        }
+        });
+
+        // Clear form
+        document.getElementById('clearBtn').addEventListener('click', function () {
+        document.getElementById('lectureForm').reset();
+        document.getElementById('videoPreview').style.display = 'none';
+        });
+
+        // Preview video before uploading (removed in your request)
+        document.getElementById("lectureVideo").addEventListener("change", function (event) {
+            const file = event.target.files[0];
+            const preview = document.getElementById("videoPreview");
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    preview.style.display = "block";
+                    preview.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+
+        // delecte lecture
+        async function deleteLecture(lectureId) {
+        const token = getAuthToken();
+        if (!token) {
+            alert("Please login to delete a lecture.");
+            return;
+        }
+
+        try {
+            const response = await fetch(`http://localhost:8080/api/lecture/${lectureId}`, {
+            method: "DELETE",
+            headers: {
+                "token": token
+            }
+            });
+
+            const result = await response.json();
+            if (response.ok) {
+            alert("Lecture deleted successfully!");
+            fetchLectures(); // Refresh the course list after deletion
+            } else {
+            alert(result.message || "Failed to delete the lecture.");
+            }
+        } catch (error) {
+            console.error("Error deleting lecture:", error);
+            alert("An error occurred while deleting the lecture.");
+        }
+        }
+
+        // Load lectures when the page is loaded
+        window.onload = function () {
+        fetchLectures();
+        };
+    </script>
+
+
+    </body>
+    </html>

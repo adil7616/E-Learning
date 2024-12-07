@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Add Courses</title>
+  <style>
+    /* Inline CSS */
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f9f9f9;
+    }
+
+    .layout {
+      display: flex;
+      justify-content: space-between;
+      margin: 20px;
+    }
+
+    .admin-courses {
+      display: flex;
+      width: 100%;
+    }
+
+    .left {
+      width: 60%;
+      padding: 20px;
+    }
+
+    .right {
+      width: 35%;
+      padding: 20px;
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    h1, h2 {
+      color: #333;
+    }
+
+    .search-box {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 20px;
+      font-size: 1em;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+    }
+
+    .dashboard-content {
+      padding: 10px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+      background-color: #fff;
+      margin-top: 10px;
+    }
+
+    .course-item {
+      padding: 15px;
+      margin-bottom: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      background-color: #fff;
+    }
+
+    .course-item h3 {
+      margin: 0;
+      font-size: 1.2em;
+    }
+
+    .common-btn, .secondary-btn, .like-btn {
+      padding: 10px 15px;
+      border: none;
+      border-radius: 4px;
+      font-size: 1em;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    .common-btn {
+      background-color: #5a2d82;
+      color: #fff;
+    }
+
+    .secondary-btn {
+      background-color: #ccc;
+      color: #333;
+    }
+
+    .delete-btn {
+      background-color: #ff5733;
+      color: #fff;
+    }
+    .edit-btn {
+      background-color: #0dd15e;
+      color: #fff;
+    }
+
+    .course-form input,
+    .course-form select {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 10px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+    }
+
+    #imagePreview {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      margin-top: 10px;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <div class="admin-courses">
+      <!-- Left Section -->
+      <div class="left">
+        <h1>All Courses</h1>
+        <input 
+          type="text" 
+          id="searchInput" 
+          placeholder="Search courses..." 
+          class="search-box" 
+        />
+        <div class="dashboard-content" id="courses-container">
+          <p>No Courses Yet</p>
+        </div>
+      </div>
+
+      <!-- Right Section -->
+      <div class="right">
+        <div class="add-course">
+          <div class="course-form">
+            <h2>Add Course</h2>
+            <form id="courseForm">
+              <label for="title">Title</label>
+              <input type="text" id="title" required />
+
+              <label for="description">Description</label>
+              <input type="text" id="description" required />
+
+              <label for="category">Category</label>
+              <select id="category" required>
+                <option value="">Select Category</option>
+                <option value="Web Development">Web Development</option>
+                <option value="App Development">App Development</option>
+                <option value="Game Development">Game Development</option>
+                <option value="Data Science">Data Science</option>
+                <option value="Artificial Intelligence">Artificial Intelligence</option>
+              </select>
+
+              <label for="createdBy">Created By</label>
+              <input type="text" id="createdBy" required />
+
+              <label for="image">Upload Image</label>
+              <input type="file" id="image" accept="image/*" required />
+              <img id="imagePreview" alt="Preview" />
+
+              <label for="duration">Duration (hours)</label>
+              <input type="number" id="duration" min="0" required />
+
+              <label for="price">Price</label>
+              <input type="number" id="price" min="0" required />
+
+              <button type="submit" id="submitBtn" class="common-btn">
+                Add
+              </button>
+              <button type="button" id="clearBtn" class="secondary-btn">
+                Clear Form
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const apiURL = "http://localhost:8080/api/course/new";
+    const coursesURL = "http://localhost:8080/api/course/all";
+  
+    // Get the stored token (modify this based on your app's logic)
+    function getAuthToken() {
+      return localStorage.getItem('token');
+    }
+
+    // Fetch all courses
+    async function fetchCourses() {
+      try {
+        const token=getAuthToken('token');
+        alert(token);
+        const response = await fetch(coursesURL);
+        const data = await response.json();
+        console.log("Courses Data:", data);
+
+        if (Array.isArray(data.courses)) {
+          displayCourses(data.courses);
+        } else {
+          throw new Error("Courses data format invalid.");
+        }
+      } catch (error) {
+        console.error("Error fetching courses:", error);
+        document.getElementById("courses-container").innerHTML = "<p>Error loading courses.</p>";
+      }
+    }
+
+    function displayCourses(courses) {
+      const coursesContainer = document.getElementById("courses-container");
+      coursesContainer.innerHTML = "";
+
+      if (courses.length === 0) {
+        coursesContainer.innerHTML = "<p>No Courses Available</p>";
+      } else {
+        courses.forEach(course => {
+          const courseElement = document.createElement("div");
+          courseElement.classList.add("course-item");
+
+          courseElement.innerHTML = `
+            <h3>${course.title}</h3>
+            <p>${course.description}</p>
+            <p><strong>Price:</strong> ₹${course.price}</p>
+            <p><strong>Category:</strong> ${course.category}</p>
+            <p><strong>Duration:</strong> ${course.duration} hours</p>
+            <a href="AdminAddLectures.html?courseId=${course._id}">
+              <button class="edit-btn">Add Lectures</button>
+            </a>
+            <button class="delete-btn" onclick="deleteCourse('${course._id}')">Delete</button>
+          `;
+
+          coursesContainer.appendChild(courseElement);
+        });
+      }
+    }
+
+    // Add a course
+    document.getElementById("courseForm").addEventListener("submit", async function(event) {
+      event.preventDefault();
+
+      const token = getAuthToken();
+      console.log("Token:", token); // Check if token is being fetched correctly
+    
+      if (!token) {
+        alert("Please login to add a course.");
+        return;
+      }
+
+      const newCourse = {
+        title: document.getElementById("title").value,
+        description: document.getElementById("description").value,
+        category: document.getElementById("category").value,
+        createdBy: document.getElementById("createdBy").value,
+        file: document.getElementById("image").files[0],
+        duration: document.getElementById("duration").value,
+        price: document.getElementById("price").value,
+      
+      };
+
+      const formData = new FormData();
+      for (let key in newCourse) {
+        formData.append(key, newCourse[key]);
+      }
+    
+      try {
+        const response = await fetch(apiURL, {
+          method: "POST",
+          headers: {
+            "token": token
+          },
+          body: formData
+        });
+
+        const result = await response.json();
+        console.log("Response:", result); // Log the response to check for any errors
+    
+        if (response.ok) {
+          alert("Course added successfully!");
+          fetchCourses(); // Refresh the course list after adding a new course
+          document.getElementById("courseForm").reset(); // Reset the form
+        } else {
+          alert(result.message || "Failed to add course.");
+        }
+      } catch (error) {
+        console.error("Error adding course:", error);
+        alert("Failed to add course.");
+      }
+    });
+
+    // Preview image before uploading
+    document.getElementById("image").addEventListener("change", function(event) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const img = document.getElementById("imagePreview");
+          img.src = e.target.result;
+          img.style.display = "block";
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    // Clear form
+    document.getElementById("clearBtn").addEventListener("click", function() {
+      document.getElementById("courseForm").reset();
+      document.getElementById("imagePreview").style.display = "none";
+    });
+//delete courses
+    async function deleteCourse(courseId) {
+      const token = getAuthToken();
+      if (!token) {
+        alert("Please login to delete a course.");
+        return;
+      }
+
+      try {
+        const response = await fetch(`http://localhost:8080/api/course/${courseId}`, {
+          method: "DELETE",
+          headers: {
+            "token": token
+          }
+        });
+
+        const result = await response.json();
+        if (response.ok) {
+          alert("Course deleted successfully!");
+          fetchCourses(); // Refresh the course list after deletion
+        } else {
+          alert(result.message || "Failed to delete the course.");
+        }
+      } catch (error) {
+        console.error("Error deleting course:", error);
+        alert("An error occurred while deleting the course.");
+      }
+    }
+
+    
+    // Initial course load
+    fetchCourses();
+  </script>
+</body>
+</html>

@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Payment Success</title>
+    <style>
+        /* Global Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f7fa;
+            margin: 0;
+        }
+
+        .payment-success-page {
+            width: 100%;
+            max-width: 600px;
+            padding: 30px;
+            background-color: white;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            text-align: center;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        .success-message h2 {
+            color: #28a745;
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+
+        .success-message p {
+            font-size: 1.1rem;
+            color: #555;
+            margin-bottom: 30px;
+        }
+
+        .error-message h2 {
+            color: #dc3545;
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+
+        .error-message p {
+            font-size: 1.1rem;
+            color: #555;
+            margin-bottom: 30px;
+        }
+
+        .common-btn {
+            padding: 12px 25px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s ease;
+        }
+
+        .common-btn:hover {
+            background-color: #0056b3;
+        }
+
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="payment-success-page">
+        <div id="successMessage" class="success-message" style="display:none;">
+            <h2>Payment Successful!</h2>
+            <p>Your course subscription has been successfully activated.</p>
+            <p id="referenceNo"></p>
+            <button id="goToDashboardBtn" class="common-btn">Go to Dashboard</button>
+        </div>
+        <div id="errorMessage" class="error-message" style="display:none;">
+            <h2>Oops!</h2>
+            <p>Something went wrong. Please try again later.</p>
+            <button class="common-btn" onclick="window.location.reload()">Retry</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const successMessage = document.getElementById("successMessage");
+            const errorMessage = document.getElementById("errorMessage");
+            const referenceNo = document.getElementById("referenceNo");
+            const goToDashboardBtn = document.getElementById("goToDashboardBtn");
+        
+            // Simulating user data
+            const user = {
+                _id: "12345",  // Example user ID
+            };
+        
+            // Retrieve URL parameters
+            const urlParams = new URLSearchParams(window.location.search);
+            const referenceId = urlParams.get("id");  // Extracts the reference number from URL params
+        
+            // Handle invalid or missing reference ID
+            if (!user || !referenceId) {
+                errorMessage.style.display = "block";  // Show error message if no user or referenceId
+                successMessage.style.display = "none";
+                return;
+            }
+        
+            // Display the success message and set the reference number
+            successMessage.style.display = "block";
+            referenceNo.textContent = `Reference No: ${referenceId}`;
+        
+            // Handle 'Go to Dashboard' button click
+            goToDashboardBtn.addEventListener("click", function() {
+                // Assuming user._id holds the user ID
+                window.location.href = `/${user._id}/dashboard`;  // Redirect to the user's dashboard
+            });
+        });
+    </script>
+</body>
+</html>

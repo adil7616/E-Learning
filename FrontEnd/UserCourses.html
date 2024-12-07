@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Course List | E-Learning Platform</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+      /* Global Styles */
+body {
+    font-family: 'Roboto', sans-serif;
+    line-height: 1.6;
+    background-color: #ffff;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 40px;
+    background-color: #ffffff;
+    color: #161515;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.logo {
+    font-size: 2em;
+    font-weight: bold;
+    letter-spacing: 2px;
+}
+
+nav a {
+    margin: 0 20px;
+    text-decoration: none;
+    color: #030202;
+    font-size: 1.1em;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+nav a:hover {
+    color: #d1c4e9;
+}
+
+main {
+    padding: 40px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.courses-list {
+    background: #000000;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+}
+
+h2 {
+    margin-bottom: 30px;
+    font-size: 2em;
+    color: #ffffff;
+    font-weight: 600;
+    text-align: center;
+}
+
+#courses-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 30px;
+    justify-items: center;
+}
+
+/* Course Card */
+.course-card {
+    background: #fdfdfd;
+    border: 1px solid #eee;
+    border-radius: 15px;
+    padding: 20px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    text-align: center;
+    box-sizing: border-box;
+    max-width: 350px;  /* Limit the card's max width */
+    width: 100%; /* Ensure card takes full available width */
+    min-height: 400px; /* Set minimum height */
+}
+
+.course-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1);
+}
+
+.course-card img {
+    max-width: 120px; /* Set fixed width for logo-like images */
+    max-height: 120px; 
+    object-fit: contain;
+    border-radius: 50%;
+    margin-bottom: 15px;
+}
+
+.course-card h3 {
+    font-size: 1.3em;
+    margin-bottom: 15px;
+    color: #333;
+    font-weight: 500;
+    line-height: 1.4;
+}
+
+.course-card p {
+    color: #666;
+    font-size: 1em;
+    margin-bottom: 20px;
+    line-height: 1.5;
+}
+
+.course-card p strong {
+    font-weight: 600;
+}
+
+/* Buy Button */
+.btn-buy {
+    padding: 12px 20px;
+    font-size: 1.1em;
+    color: #fff;
+    background-color: #28a745;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    text-align: center;
+    width: 100%;
+}
+
+.btn-buy:hover {
+    background-color: #218838;
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    padding: 20px;
+    background-color: #90dffe;
+    color: #fff;
+    position: relative;
+    width: 100%;
+    bottom: 0;
+}
+
+footer p {
+    font-size: 1em;
+    font-weight: 400;
+    margin: 0;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    header {
+        padding: 20px 30px;
+    }
+
+    nav a {
+        margin: 0 10px;
+    }
+
+    .course-card {
+        padding: 15px;
+        min-height: 360px;  /* Reduce min height on smaller screens */
+    }
+
+    .btn-buy {
+        font-size: 1em;
+        padding: 10px 18px;
+    }
+}
+
+@media (max-width: 768px) {
+    header {
+        flex-wrap: wrap;
+        text-align: center;
+        padding: 15px 20px;
+    }
+
+    .logo {
+        font-size: 1.6em;
+        margin-bottom: 10px;
+    }
+
+    nav {
+        margin-top: 10px;
+    }
+
+    nav a {
+        display: block;
+        margin: 5px 0;
+    }
+
+    .courses-list {
+        padding: 20px;
+    }
+
+    .course-card {
+        padding: 12px;
+        min-height: 320px;
+    }
+
+    .course-card h3 {
+        font-size: 1.1em;
+    }
+
+    .btn-buy {
+        font-size: 1em;
+        padding: 8px 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    header {
+        padding: 10px 15px;
+    }
+
+    .logo {
+        font-size: 1.4em;
+    }
+
+    nav a {
+        font-size: 0.9em;
+    }
+
+    .courses-list {
+        padding: 15px;
+    }
+
+    .course-card {
+        padding: 10px;
+        min-height: 300px;
+    }
+
+    .course-card img {
+        max-width: 80px;
+        max-height: 80px;
+    }
+
+    .btn-buy {
+        font-size: 0.9em;
+        padding: 8px 12px;
+    }
+}
+
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="logo">E-Learning</div>
+        <nav>
+            <a href="UserIndex.html">Home</a>
+            <a href="courses.html">Courses</a>
+            <a href="about.html">About</a>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <!-- Available Courses Section -->
+        <section class="courses-list">
+            <h2>Available Courses</h2>
+            <div id="courses-container">
+                <p>Loading courses...</p>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2024 E-Learning Platform</p>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        const API_URL = "http://localhost:8080/api/course/all";
+        
+function getAuthToken() {
+    // Fetch the user token specifically
+    return localStorage.getItem('user_token');  // Make sure it's the correct key for user token
+}
+        async function fetchCourses() {
+            const coursesContainer = document.getElementById("courses-container");
+            coursesContainer.innerHTML = "<p>Loading courses...</p>";
+
+            try {
+                const response = await fetch(API_URL);
+                if (!response.ok) throw new Error(`Failed to fetch courses: ${response.statusText}`);
+
+                const result = await response.json();
+                renderCourses(result.courses || []);
+            } catch (error) {
+                coursesContainer.innerHTML = "<p>Failed to load courses. Please try again later.</p>";
+                console.error("Error fetching courses:", error);
+            }
+        }
+
+        function renderCourses(courses) {
+            const coursesContainer = document.getElementById("courses-container");
+            coursesContainer.innerHTML = "";
+            const token=getAuthToken('token');
+            alert(token);
+
+            if (!courses.length) {
+                coursesContainer.innerHTML = "<p>No courses available.</p>";
+                return;
+            }
+
+            courses.forEach(course => {
+                const courseCard = document.createElement("div");
+                courseCard.className = "course-card";
+
+                // Make sure the course.id exists and is passed to the buyCourse function correctly
+                courseCard.innerHTML = `
+                    <img src="http://localhost:8080/${course.image}" alt="${course.title}">
+                    <h3>${course.title}</h3>
+                    <p>${course.description}</p>
+                    <p><strong>Category:</strong> ${course.category}</p>
+                    <p><strong>Duration:</strong> ${course.duration}</p>
+                    ${
+                        course.price === 0
+                ? `<a href="UserLectures.html?courseId=${course._id}&token=${token}">
+                    <button class="btn-buy">Free Course</button>
+                    </a>`
+                : `<p><strong>Price:</strong> $${course.price}</p>
+                    <button class="btn-buy" onclick="buyCourse('${course._id}', '${token}')">Buy</button>`
+                    }
+                `;
+
+                coursesContainer.appendChild(courseCard);
+            });
+        }
+        // Corrected function to handle course purchase
+        function buyCourse(courseId) {
+            if (courseId) {
+                alert(`You need to Buy first: `);
+            } else {
+                alert("Invalid course ID.");
+            }
+        }
+
+        fetchCourses();
+    </script>
+</body>
+</html>

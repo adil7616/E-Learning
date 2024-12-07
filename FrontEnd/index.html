@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to E-learning</title>
+    <link rel="stylesheet" href="home.css">
+    <style>
+        /* Add some basic styles for the login modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .modal input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .modal button {
+            width: 100%;
+            padding: 10px;
+            background-color: #1a73e8;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .modal button:hover {
+            background-color: #005bb5;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Home Section -->
+    <section class="home">
+        <div class="home-content">
+            <h1>Welcome to our E-learning Platform</h1>
+            <p>Learn, Grow, Excel</p>
+            <a href="register.html"><button id="getStartedBtn" class="common-btn"> Get Register</button></a>
+            <a href="login.html"><button id="userLoginBtn" class="common-btn">User Login</button></a>
+            <a href="AdminLogin.html"> <button id="adminLoginBtn" class="common-btn">Admin Login</button></a>
+        </div>
+    </section>
+
+    <!-- User Login Modal -->
+    <div id="userLoginModal" class="modal">
+        <div class="modal-content">
+            <h2>User Login</h2>
+            <input type="text" placeholder="Email" id="userUsername">
+            <input type="password" placeholder="Password" id="userPassword">
+            <button onclick="loginUser()">Login</button>
+        </div>
+    </div>
+
+    <!-- Admin Login Modal -->
+    <div id="adminLoginModal" class="modal">
+        <div class="modal-content">
+            <h2>Admin Login</h2>
+            <input type="text" placeholder="Email" id="adminUsername">
+            <input type="password" placeholder="Password" id="adminPassword">
+            <button onclick="loginAdmin()">Login</button>
+        </div>
+    </div>
+
+    <!-- Testimonials Section -->
+    <section class="testimonials">
+        <h2>What our students say</h2>
+        <div class="testimonials-cards">
+            <!-- Testimonial Card 1 -->
+            <div class="testimonial-card">
+                <div class="student-image">
+                    <img src="https://th.bing.com/th?q=Current+Bachelor&w=120&h=120&c=1&rs=1&qlt=90&cb=1&dpr=1.3&pid=InlineBlock&mkt=en-IN&cc=IN&setlang=en&adlt=moderate&t=1&mw=247" alt="John Doe" />
+                </div>
+                <p class="message">
+                    This platform helped me learn so effectively. The courses are amazing and the instructors are top-notch.
+                </p>
+                <div class="info">
+                    <p class="name">John Doe</p>
+                    <p class="position">Student</p>
+                </div>
+            </div>
+
+            <!-- Testimonial Card 2 -->
+            <div class="testimonial-card">
+                <div class="student-image">
+                    <img src="https://th.bing.com/th/id/OIP.GKAiW3oc2TWXVEeZAzrWOAHaJF?w=135&h=180&c=7&r=0&o=5&dpr=1.3&pid=1.7" alt="Jane Smith" />
+                </div>
+                <p class="message">
+                    I've learned more here than in any other place. The interactive lessons and quizzes make learning enjoyable.
+                </p>
+                <div class="info">
+                    <p class="name">Jane Smith</p>
+                    <p class="position">Student</p>
+                </div>
+            </div>
+
+            <!-- Testimonial Card 3 -->
+            <div class="testimonial-card">
+                <div class="student-image">
+                    <img src="https://th.bing.com/th?q=Current+Bachelor&w=120&h=120&c=1&rs=1&qlt=90&cb=1&dpr=1.3&pid=InlineBlock&mkt=en-IN&cc=IN&setlang=en&adlt=moderate&t=1&mw=247" alt="John Doe" />
+                </div>
+                <p class="message">
+                    This platform helped me learn so effectively. The courses are amazing and the instructors are top-notch.
+                </p>
+                <div class="info">
+                    <p class="name">John Doe</p>
+                    <p class="position">Student</p>
+                </div>
+            </div>
+
+            <!-- Testimonial Card 4 -->
+            <div class="testimonial-card">
+                <div class="student-image">
+                    <img src="https://th.bing.com/th/id/OIP.GKAiW3oc2TWXVEeZAzrWOAHaJF?w=135&h=180&c=7&r=0&o=5&dpr=1.3&pid=1.7" alt="Jane Smith" />
+                </div>
+                <p class="message">
+                    I've learned more here than in any other place. The interactive lessons and quizzes make learning enjoyable.
+                </p>
+                <div class="info">
+                    <p class="name">Jane Smith</p>
+                    <p class="position">Student</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2024 E-Learning Platform | All rights reserved.</p>
+    </footer>
+
+    <!-- <script src="home.js"></script> -->
+    <script>
+      // Show user login modal
+document.getElementById("userLoginBtn").addEventListener("click", function() {
+    document.getElementById("userLoginModal").style.display = "flex";
+    document.getElementById("adminLoginBtn").disabled = true;  // Disable Admin Login Button while in User Login
+});
+
+// Show admin login modal
+document.getElementById("adminLoginBtn").addEventListener("click", function() {
+    document.getElementById("adminLoginModal").style.display = "flex";
+    document.getElementById("userLoginBtn").disabled = true;  // Disable User Login Button while in Admin Login
+});
+
+// Close modals if clicked outside the modal content
+window.addEventListener("click", function(event) {
+    if (event.target == document.getElementById("userLoginModal") || event.target == document.getElementById("adminLoginModal")) {
+        document.getElementById("userLoginModal").style.display = "none";
+        document.getElementById("adminLoginModal").style.display = "none";
+        document.getElementById("userLoginBtn").disabled = false;  // Enable User Login button when modal is closed
+        document.getElementById("adminLoginBtn").disabled = false;  // Enable Admin Login button when modal is closed
+    }
+});
+
+// Login User Function
+function loginUser() {
+    let username = document.getElementById("userUsername").value;
+    let password = document.getElementById("userPassword").value;
+    
+    // Validate login (add your validation logic here)
+    if (username && password) {
+        alert("User login successful!");
+        document.getElementById("userLoginModal").style.display = "none";
+        window.location.href = "userIndex.html";  // Redirect to User Dashboard (userIndex.html)
+    } else {
+        alert("Please fill in both fields.");
+    }
+}
+
+
+// Login Admin Function
+function loginAdmin() {
+    let email = document.getElementById("adminUsername").value;
+    let password = document.getElementById("adminPassword").value;
+    
+    // Validate login (add your validation logic here)
+    if (email && password) {
+        fetchAndStoreTokenFromHeader(email,password);
+        const token=localStorage.getItem('token');
+        if(token!=null)
+        {
+            alert("Admin login successful!");
+        }
+        else{
+            alert("please login");
+        }
+        document.getElementById("adminLoginModal").style.display = "none";
+        // sessionStorage.setItem('jwt', token);
+        window.location.href = "AdminIndex.html";  // Redirect to Admin Dashboard (AdminIndex.html)
+    } else {
+        alert("Please fill in both fields.");
+    }
+}
+
+
+async function fetchAndStoreTokenFromHeader(email,password) {
+    const formData = new FormData(event.target);
+
+const data = {
+    email: formData.get('email'),
+    password: formData.get('password')
+};
+
+try {
+    const response = await fetch('http://localhost:8080/api/user/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+    });
+
+    if (response.ok) {
+        const result = await response.json();
+        const modalMessage = document.getElementById('modalMessage');
+        const modal = document.getElementById('messageModal');
+
+        const jwt = result.token || result.accessToken || result.jwt;
+        if (jwt!=null)
+        localStorage.setItem('token', jwt);
+        modalMessage.textContent = result.message; // Success message
+        modal.style.display = "block"; // Show modal
+        setTimeout(() => {
+            modal.style.display = "none"; // Hide modal after a few seconds
+            window.location.href = 'courses.html'; // Redirect to main page
+        }, 2000);
+    } else {
+        modalMessage.textContent = result.message; // Error message
+        modal.style.display = "block"; // Show modal
+    }
+
+} catch (error) {
+    console.error('Error:', error);
+    const modalMessage = document.getElementById('modalMessage');
+    modalMessage.textContent = 'An error occurred. Please try again.'; // Error message
+    document.getElementById('messageModal').style.display = "block"; // Show modal
+}
+
+    // const response = await fetch('http://localhost:8080/api/user/login', {
+    //     method: 'POST',
+    //     headers: {
+    //         'Content-Type': 'application/json',
+    //     },
+    //     body: JSON.stringify({
+    //         email: email,
+    //         password: password,
+    //     }),
+    // });
+    // if (response.ok) {
+    //     const data = await response.json();
+    //     const jwt = data.token || data.accessToken || data.jwt;
+    //     // const jwt = response.headers.get('Authorization');
+    //     if (jwt!=null) {
+    //         // const token = jwt.split(' ')[1];
+    //         localStorage.setItem('token', jwt);
+    //         console.log('JWT stored in localStorage:', jwt);
+    //         alert(jwt);
+    //     } else {
+    //         console.error('JWT not found in Authorization header');
+    //     }
+    // }
+    // else{
+    //     alert("Enter valid user Name or password: ");
+    // }
+}
+
+    </script>
+</body>
+</html>

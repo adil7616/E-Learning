@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Course Study Page</title>
+    <!-- <link rel="stylesheet" href="coursestudy.css"> -->
+     <style>
+        /* General Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+  color: #333;
+  line-height: 1.6;
+}
+
+/* Course Study Section */
+.course-study-page {
+  background-color: white;
+  text-align: center;
+  padding: 40px;
+  margin-top: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  max-width: 800px;
+  margin: 40px auto;
+}
+
+.course-study-page img {
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.course-study-page h2 {
+  font-size: 28px;
+  margin: 20px 0;
+}
+
+.course-study-page h4 {
+  font-size: 18px;
+  margin-bottom: 20px;
+  color: #555;
+}
+
+.course-study-page h5 {
+  font-size: 16px;
+  margin: 10px 0;
+}
+
+.course-study-page a {
+  color: #8a4baf;
+  text-decoration: none;
+  font-size: 18px;
+}
+
+.course-study-page a:hover {
+  text-decoration: underline;
+}
+
+/* Footer */
+footer {
+  background-color: #2c3e50;
+  color: white;
+  text-align: center;
+  padding: 10px;
+  margin-top: 40px;
+}
+
+     </style>
+</head>
+<body>
+
+    <!-- Course Study Section -->
+    <section class="course-study-page" id="courseStudyPage">
+        <img id="courseImage" src="" alt="Course Image" width="350" />
+        <h2 id="courseTitle"></h2>
+        <h4 id="courseDescription"></h4>
+        <h5 id="courseInstructor"></h5>
+        <h5 id="courseDuration"></h5>
+        <a href="#" id="lecturesLink">
+            <h2>Lectures</h2>
+        </a>
+    </section>
+
+    <footer>
+        <p>&copy; 2024 E-Learning Platform | All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Sample course data (this would be fetched from an API in a real-world scenario)
+const courseData = {
+    image: "https://via.placeholder.com/350", // Placeholder image for the course
+    title: "Introduction to Web Development",
+    description: "Learn the fundamentals of web development, including HTML, CSS, and JavaScript.",
+    createdBy: "John Doe",
+    duration: 6, // Duration in weeks
+    _id: "12345", // Course ID
+};
+
+// Function to render course information
+const renderCourse = (course) => {
+    // Get the elements to populate with course data
+    const courseImage = document.getElementById('courseImage');
+    const courseTitle = document.getElementById('courseTitle');
+    const courseDescription = document.getElementById('courseDescription');
+    const courseInstructor = document.getElementById('courseInstructor');
+    const courseDuration = document.getElementById('courseDuration');
+    const lecturesLink = document.getElementById('lecturesLink');
+
+    // Populate the course data into the page
+    courseImage.src = course.image;
+    courseTitle.textContent = course.title;
+    courseDescription.textContent = course.description;
+    courseInstructor.textContent = `by - ${course.createdBy}`;
+    courseDuration.textContent = `Duration - ${course.duration} weeks`;
+
+    // Set the link to the course lectures (based on the course ID)
+    lecturesLink.href = `/lectures/${course._id}`;
+};
+
+// Initial rendering of the course data
+renderCourse(courseData);
+
+    </script>
+</body>
+</html>

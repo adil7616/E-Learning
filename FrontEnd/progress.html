@@ -1,0 +1,71 @@
+<!-- // Fetch user progress
+async function fetchProgress() {
+    try {
+    const response = await fetch(`${server}/api/user/progress?course=${courseId}`, {
+        headers: { token: localStorage.getItem("token") }
+    });
+    const data = await response.json();
+    progress = data.progress;
+    render();
+    } catch (error) {
+    console.error(error);
+    }
+}
+
+// Update lecture progress
+async function addProgress(id) {
+    try {
+    const response = await fetch(`${server}/api/user/progress?course=${courseId}&lectureId=${id}`, {
+        method: "POST",
+        headers: { token: localStorage.getItem("token") }
+    });
+    const data = await response.json();
+    fetchProgress();
+    } catch (error) {
+    console.error(error);
+    }
+}
+
+  // Handle form submission to add a new lecture
+async function submitHandler(e) {
+    e.preventDefault();
+    btnLoading = true;
+
+    const formData = new FormData();
+    formData.append("title", title);
+    formData.append("description", description);
+    formData.append("file", video);
+
+    try {
+    const response = await fetch(`${server}/api/course/${courseId}`, {
+        method: "POST",
+        headers: { token: localStorage.getItem("token") },
+        body: formData
+    });
+    const data = await response.json();
+    alert(data.message);
+    btnLoading = false;
+    showForm = false;
+    fetchLectures();
+    } catch (error) {
+    alert(error.message);
+    btnLoading = false;
+    }
+}
+
+const progressMarkup = `
+<div class="progress">
+    Lecture completed - ${progress.completedLectures || 0} out of ${progress.allLectures || 0} <br />
+    <progress value="${progress.courseProgressPercentage || 0}" max="100"></progress> ${progress.courseProgressPercentage || 0} %
+</div>
+`;
+
+const lecturesList = lectures.map((lecture, i) => {
+return `
+    <div class="lecture-number ${lecture._id === lecture._id ? 'active' : ''}" onclick="fetchLecture('${lecture._id}')">
+    ${i + 1}. ${lecture.title}
+    ${progress.completedLectures.includes(lecture._id) ? '<span style="background: red; padding: 2px; border-radius: 6px; color: greenyellow;">✓</span>' : ''}
+    </div>
+`;
+}).join("");
+fetchProgress(); -->
